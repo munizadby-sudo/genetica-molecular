@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genética & Biologia Molecular</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="none" stroke="var(--accent)" stroke-width="1.5"/><path d="M8 9 Q14 14 20 9 M8 14 Q14 19 20 14 M8 19 Q14 24 20 19" stroke="var(--accent)" stroke-width="1.5" fill="none"/></svg>
+      <span>GenMol</span>
+    </div>
+    <div class="nav-links">
+      <a href="#dna">Mapeamento</a>
+      <a href="#paternidade">Paternidade</a>
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#glossario">Glossário</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="dna-canvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-tag">Genética &amp; Biologia Molecular</p>
+      <h1 class="hero-title">O Código<br/><em>da Vida</em></h1>
+      <p class="hero-sub">Mapeamento de DNA · Testes de Paternidade · Diagnósticos Moleculares</p>
+      <div class="hero-cta">
+        <a href="#dna" class="btn-primary">Explorar</a>
+        <a href="#glossario" class="btn-ghost">Glossário</a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Role para explorar</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- INTRO CARDS -->
+  <section class="intro-strip">
+    <div class="strip-card">
+      <div class="strip-icon">🧬</div>
+      <h3>3 bilhões</h3>
+      <p>pares de bases no genoma humano</p>
+    </div>
+    <div class="strip-card">
+      <div class="strip-icon">🔬</div>
+      <h3>99,9%</h3>
+      <p>do DNA é idêntico entre todos os humanos</p>
+    </div>
+    <div class="strip-card">
+      <div class="strip-icon">🧪</div>
+      <h3>0,1%</h3>
+      <p>de diferença nos torna únicos — impressão digital genética</p>
+    </div>
+    <div class="strip-card">
+      <div class="strip-icon">⚡</div>
+      <h3>24–48h</h3>
+      <p>tempo de um diagnóstico molecular moderno</p>
+    </div>
+  </section>
+
+  <!-- SECTION 1: DNA MAPPING -->
+  <section class="content-section" id="dna">
+    <div class="section-header">
+      <span class="section-tag">01</span>
+      <h2>Mapeamento de DNA</h2>
+      <p class="section-lead">O processo de identificar a sequência exata dos nucleotídeos ao longo dos cromossomos humanos.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="text-col">
+        <h3>O que é o DNA?</h3>
+        <p>O ácido desoxirribonucleico (DNA) é a molécula que carrega as instruções genéticas de todos os seres vivos. Estruturado em dupla hélice, é composto por quatro bases nitrogenadas:</p>
+        <div class="bases-grid">
+          <div class="base base-a"><span>A</span><small>Adenina</small></div>
+          <div class="base base-t"><span>T</span><small>Timina</small></div>
+          <div class="base base-g"><span>G</span><small>Guanina</small></div>
+          <div class="base base-c"><span>C</span><small>Citosina</small></div>
+        </div>
+        <p>As bases sempre se emparelham: <strong>A–T</strong> e <strong>G–C</strong>, formando os "degraus" da hélice.</p>
+
+        <h3>Projeto Genoma Humano</h3>
+        <p>Concluído em 2003, o Projeto Genoma Humano levou 13 anos para sequenciar todos os ~3 bilhões de pares de bases do genoma. Hoje, tecnologias de <em>Next-Generation Sequencing (NGS)</em> realizam essa tarefa em apenas um dia.</p>
+
+        <div class="timeline">
+          <div class="tl-item"><span class="tl-year">1953</span><span class="tl-text">Watson &amp; Crick descrevem a dupla hélice</span></div>
+          <div class="tl-item"><span class="tl-year">1990</span><span class="tl-text">Início do Projeto Genoma Humano</span></div>
+          <div class="tl-item"><span class="tl-year">2003</span><span class="tl-text">Sequenciamento completo do genoma humano</span></div>
+          <div class="tl-item"><span class="tl-year">2023</span><span class="tl-text">Sequenciamento completo em &lt; 24h por US$ 200</span></div>
+        </div>
+      </div>
+
+      <div class="visual-col">
+        <div class="anim-box">
+          <canvas id="helix-canvas" width="300" height="450"></canvas>
+          <p class="anim-label">Dupla Hélice — rotação em tempo real</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PCR -->
+    <div class="process-block">
+      <h3>PCR — Reação em Cadeia da Polimerase</h3>
+      <p>Técnica fundamental que amplifica segmentos específicos de DNA, criando milhões de cópias a partir de uma quantidade mínima de material genético.</p>
+      <div class="pcr-steps">
+        <div class="pcr-step" data-step="1">
+          <div class="pcr-icon">🔥</div>
+          <h4>Desnaturação</h4>
+          <p>95°C — as fitas de DNA se separam</p>
+        </div>
+        <div class="pcr-arrow">→</div>
+        <div class="pcr-step" data-step="2">
+          <div class="pcr-icon">❄️</div>
+          <h4>Hibridização</h4>
+          <p>55–65°C — primers se ligam às fitas</p>
+        </div>
+        <div class="pcr-arrow">→</div>
+        <div class="pcr-step" data-step="3">
+          <div class="pcr-icon">⚗️</div>
+          <h4>Extensão</h4>
+          <p>72°C — DNA polimerase copia o segmento</p>
+        </div>
+        <div class="pcr-arrow">→</div>
+        <div class="pcr-step" data-step="4">
+          <div class="pcr-icon">✕2<sup>n</sup></div>
+          <h4>Repetição</h4>
+          <p>30–40 ciclos = bilhões de cópias</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: PATERNIDADE -->
+  <section class="content-section alt-bg" id="paternidade">
+    <div class="section-header">
+      <span class="section-tag">02</span>
+      <h2>Teste de Paternidade</h2>
+      <p class="section-lead">Análise de marcadores STR para determinar vínculos biológicos com precisão superior a 99,99%.</p>
+    </div>
+
+    <div class="two-col reverse">
+      <div class="visual-col">
+        <div class="anim-box">
+          <canvas id="gel-canvas" width="300" height="400"></canvas>
+          <p class="anim-label">Eletroforese em gel — perfis de STR</p>
+        </div>
+      </div>
+      <div class="text-col">
+        <h3>Como funciona?</h3>
+        <p>O teste analisa regiões chamadas <strong>STR (Short Tandem Repeats)</strong> — sequências curtas que se repetem ao longo do DNA e variam muito entre indivíduos.</p>
+
+        <div class="info-card">
+          <h4>🧬 Herança dos STRs</h4>
+          <p>Cada pessoa herda <strong>um alelo de cada STR da mãe</strong> e <strong>um do pai</strong>. Se o suposto pai for o pai biológico, seus alelos deverão coincidir com os alelos paternos da criança em <em>todos</em> os marcadores analisados.</p>
+        </div>
+
+        <h3>Etapas do Teste</h3>
+        <ol class="steps-list">
+          <li><strong>Coleta</strong> — swab bucal, sangue ou fio de cabelo</li>
+          <li><strong>Extração</strong> — isolamento do DNA da amostra</li>
+          <li><strong>Amplificação</strong> — PCR nos loci STR alvo</li>
+          <li><strong>Eletroforese</strong> — separação por tamanho dos fragmentos</li>
+          <li><strong>Análise</strong> — comparação dos perfis genéticos</li>
+          <li><strong>Laudo</strong> — probabilidade de paternidade calculada</li>
+        </ol>
+
+        <div class="result-cards">
+          <div class="result-card positive">
+            <span>✓</span>
+            <div>
+              <strong>Incluído</strong>
+              <p>≥ 99,99% de probabilidade</p>
+            </div>
+          </div>
+          <div class="result-card negative">
+            <span>✗</span>
+            <div>
+              <strong>Excluído</strong>
+              <p>Não-coincidência em ≥ 2 marcadores</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="str-demo">
+      <h3>Visualização de Marcadores STR</h3>
+      <p>Observe como mãe, filho e pai compartilham alelos nos marcadores genéticos:</p>
+      <div class="str-table-wrap">
+        <table class="str-table">
+          <thead>
+            <tr><th>Marcador</th><th>Mãe</th><th>Filho</th><th>Pai</th><th>Coincidência</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>D3S1358</td><td>15, 17</td><td>15, 16</td><td>16, 18</td><td class="match">✓ 16 (pai)</td></tr>
+            <tr><td>vWA</td><td>14, 17</td><td>14, 18</td><td>18, 19</td><td class="match">✓ 18 (pai)</td></tr>
+            <tr><td>FGA</td><td>22, 24</td><td>22, 23</td><td>23, 25</td><td class="match">✓ 23 (pai)</td></tr>
+            <tr><td>D8S1179</td><td>10, 13</td><td>10, 14</td><td>12, 14</td><td class="match">✓ 14 (pai)</td></tr>
+            <tr><td>D21S11</td><td>29, 31</td><td>29, 30</td><td>30, 32</td><td class="match">✓ 30 (pai)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: DIAGNÓSTICO -->
+  <section class="content-section" id="diagnostico">
+    <div class="section-header">
+      <span class="section-tag">03</span>
+      <h2>Diagnósticos Moleculares</h2>
+      <p class="section-lead">Identificação de doenças genéticas, infecciosas e oncológicas por análise direta do material genético.</p>
+    </div>
+
+    <div class="diag-grid">
+      <div class="diag-card">
+        <div class="diag-icon">🦠</div>
+        <h3>Doenças Infecciosas</h3>
+        <p>PCR em tempo real (qPCR) detecta material genético de vírus e bactérias com altíssima sensibilidade — como nos testes de COVID-19, HIV e Tuberculose.</p>
+        <div class="diag-tag">qPCR · RT-PCR</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-icon">🧬</div>
+        <h3>Doenças Genéticas</h3>
+        <p>Sequenciamento de exoma e genoma identifica mutações causadoras de condições como Fibrose Cística, Anemia Falciforme e Síndrome de Down.</p>
+        <div class="diag-tag">NGS · FISH · Cariótipo</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-icon">🔴</div>
+        <h3>Oncologia Molecular</h3>
+        <p>Identificação de mutações somáticas em genes como BRCA1/2, TP53 e KRAS orienta terapias-alvo personalizadas para cada paciente.</p>
+        <div class="diag-tag">Biopsia Líquida · Sequenciamento</div>
+      </div>
+      <div class="diag-card">
+        <div class="diag-icon">💊</div>
+        <h3>Farmacogenômica</h3>
+        <p>Analisa como variações genéticas afetam a resposta a medicamentos, permitindo prescrições personalizadas e mais seguras.</p>
+        <div class="diag-tag">SNPs · Metabolismo</div>
+      </div>
+    </div>
+
+    <!-- RT-PCR explainer -->
+    <div class="process-block dark">
+      <h3>Como funciona o RT-PCR (diagnóstico de RNA viral)?</h3>
+      <div class="rtpcr-flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">
+            <h4>Coleta</h4>
+            <p>Swab nasofaríngeo coleta células com RNA viral</p>
+          </div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">
+            <h4>Transcrição Reversa</h4>
+            <p>Enzima transcriptase reversa converte RNA → DNA complementar (cDNA)</p>
+          </div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">
+            <h4>Amplificação por PCR</h4>
+            <p>O cDNA é amplificado e a fluorescência é medida em tempo real</p>
+          </div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-text">
+            <h4>Resultado</h4>
+            <p>Curva de amplificação acima do limiar = resultado positivo</p>
+          </div>
+        </div>
+      </div>
+      <canvas id="pcr-curve" width="700" height="200"></canvas>
+      <p class="anim-label" style="text-align:center">Curva de amplificação — ciclos × fluorescência</p>
+    </div>
+
+    <!-- Comparação -->
+    <div class="compare-block">
+      <h3>Principais Técnicas Comparadas</h3>
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Técnica</th>
+              <th>Sensibilidade</th>
+              <th>Velocidade</th>
+              <th>Custo</th>
+              <th>Aplicação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PCR convencional</strong></td>
+              <td><span class="bar-cell"><span class="bar" style="width:80%"></span>Alta</span></td>
+              <td>2–4h</td>
+              <td>Baixo</td>
+              <td>Doenças infecciosas</td>
+            </tr>
+            <tr>
+              <td><strong>qPCR (tempo real)</strong></td>
+              <td><span class="bar-cell"><span class="bar" style="width:95%"></span>Muito Alta</span></td>
+              <td>1–2h</td>
+              <td>Médio</td>
+              <td>Quantificação viral</td>
+            </tr>
+            <tr>
+              <td><strong>NGS</strong></td>
+              <td><span class="bar-cell"><span class="bar" style="width:99%"></span>Altíssima</span></td>
+              <td>24–48h</td>
+              <td>Alto</td>
+              <td>Genoma completo</td>
+            </tr>
+            <tr>
+              <td><strong>FISH</strong></td>
+              <td><span class="bar-cell"><span class="bar" style="width:70%"></span>Alta</span></td>
+              <td>1–2 dias</td>
+              <td>Médio</td>
+              <td>Cromossomos</td>
+            </tr>
+            <tr>
+              <td><strong>Microarray</strong></td>
+              <td><span class="bar-cell"><span class="bar" style="width:85%"></span>Alta</span></td>
+              <td>24h</td>
+              <td>Alto</td>
+              <td>Expressão gênica</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOSSÁRIO -->
+  <section class="content-section alt-bg" id="glossario">
+    <div class="section-header">
+      <span class="section-tag">04</span>
+      <h2>Glossário</h2>
+      <p class="section-lead">Termos essenciais da Genética e Biologia Molecular.</p>
+    </div>
+    <div class="glossary-grid">
+      <div class="glossary-item"><h4>Alelo</h4><p>Variante de um gene que ocupa um locus específico num cromossomo.</p></div>
+      <div class="glossary-item"><h4>Cromossomo</h4><p>Estrutura de DNA condensado e proteínas que carrega genes. Humanos têm 46 cromossomos (23 pares).</p></div>
+      <div class="glossary-item"><h4>Exoma</h4><p>Porção codificante do genoma — cerca de 1–2% do total, mas onde ocorrem ~85% das mutações causadoras de doenças.</p></div>
+      <div class="glossary-item"><h4>Gene</h4><p>Sequência de DNA que codifica uma proteína ou RNA funcional.</p></div>
+      <div class="glossary-item"><h4>Genótipo</h4><p>Conjunto de alelos de um organismo em um ou mais loci genéticos.</p></div>
+      <div class="glossary-item"><h4>Locus (loci)</h4><p>Posição específica de um gene ou marcador no cromossomo.</p></div>
+      <div class="glossary-item"><h4>Mutação</h4><p>Alteração permanente na sequência de DNA, podendo ser pontual (SNP), inserção ou deleção.</p></div>
+      <div class="glossary-item"><h4>NGS</h4><p>Next-Generation Sequencing: tecnologias que sequenciam milhões de fragmentos de DNA em paralelo.</p></div>
+      <div class="glossary-item"><h4>Nucleotídeo</h4><p>Unidade básica do DNA — composta por uma base nitrogenada, açúcar (desoxirribose) e fosfato.</p></div>
+      <div class="glossary-item"><h4>PCR</h4><p>Reação em Cadeia da Polimerase — técnica de amplificação de segmentos específicos de DNA.</p></div>
+      <div class="glossary-item"><h4>Polimorfismo</h4><p>Variação na sequência de DNA presente em mais de 1% da população.</p></div>
+      <div class="glossary-item"><h4>SNP</h4><p>Single Nucleotide Polymorphism — variação de um único nucleotídeo entre indivíduos.</p></div>
+      <div class="glossary-item"><h4>STR</h4><p>Short Tandem Repeat — sequências curtas repetidas em série, altamente polimórficas e usadas em identificação forense e testes de paternidade.</p></div>
+      <div class="glossary-item"><h4>Transcriptase Reversa</h4><p>Enzima que sintetiza DNA a partir de um molde de RNA, base do RT-PCR.</p></div>
+      <div class="glossary-item"><h4>Vetor</h4><p>Molécula (plasmídeo, vírus) usada para transferir material genético a uma célula hospedeira.</p></div>
+      <div class="glossary-item"><h4>Biopsia Líquida</h4><p>Análise de DNA tumoral circulante no sangue, permitindo diagnóstico e monitoramento não-invasivo do câncer.</p></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg width="24" height="24" viewBox="0 0 28 28"><circle cx="14" cy="14" r="13" fill="none" stroke="var(--accent)" stroke-width="1.5"/><path d="M8 9 Q14 14 20 9 M8 14 Q14 19 20 14 M8 19 Q14 24 20 19" stroke="var(--accent)" stroke-width="1.5" fill="none"/></svg>
+        <span>GenMol</span>
+      </div>
+      <p>Genética &amp; Biologia Molecular — Material de Palestra Acadêmica</p>
+      <p class="footer-small">Baseado em literatura científica atual · Conteúdo educacional</p>
+    </div>
+  </footer>
+
+  <script src="animations.js"></script>
+</body>
+</html>
