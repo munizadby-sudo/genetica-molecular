@@ -5,7 +5,720 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Genética & Biologia Molecular</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+/* ===== RESET & VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #06080f;
+  --bg-alt: #0d1220;
+  --surface: #111827;
+  --border: rgba(99, 179, 237, 0.15);
+  --text: #e2e8f0;
+  --text-muted: #8899aa;
+  --accent: #63b3ed;
+  --accent2: #68d391;
+  --accent3: #fc8181;
+  --accent4: #f6e05e;
+  --base-a: #fc8181;
+  --base-t: #63b3ed;
+  --base-g: #68d391;
+  --base-c: #f6e05e;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 12px;
+  --max-w: 1100px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  background: rgba(6, 8, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#dna-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.35;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+  animation: fadeUp 1s ease both;
+}
+
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+  display: block;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 40px;
+}
+
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--accent);
+  color: #06080f;
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+.btn-ghost {
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+/* ===== INTRO STRIP ===== */
+.intro-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.strip-card {
+  padding: 40px 24px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.strip-card:last-child { border-right: none; }
+.strip-card:hover { background: rgba(99, 179, 237, 0.05); }
+
+.strip-icon { font-size: 2rem; margin-bottom: 12px; }
+.strip-card h3 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.strip-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+
+/* ===== CONTENT SECTIONS ===== */
+.content-section {
+  padding: 100px 40px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.alt-bg {
+  max-width: 100%;
+  background: var(--bg-alt);
+}
+
+.alt-bg > * { max-width: var(--max-w); margin-left: auto; margin-right: auto; }
+
+.section-header {
+  margin-bottom: 64px;
+}
+
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.section-lead {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 620px;
+}
+
+/* ===== TWO COL ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+  margin-bottom: 64px;
+}
+
+.two-col.reverse { direction: rtl; }
+.two-col.reverse > * { direction: ltr; }
+
+.text-col h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #fff;
+  margin: 32px 0 12px;
+}
+.text-col h3:first-child { margin-top: 0; }
+.text-col p { color: var(--text-muted); margin-bottom: 12px; }
+.text-col strong { color: var(--text); }
+.text-col em { color: var(--accent); font-style: normal; }
+
+/* ===== BASES ===== */
+.bases-grid {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.base {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  min-width: 70px;
+}
+.base span { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; }
+.base small { font-size: 0.7rem; letter-spacing: 0.05em; opacity: 0.8; }
+.base-a { border-color: var(--base-a); color: var(--base-a); background: rgba(252,129,129,0.08); }
+.base-t { border-color: var(--base-t); color: var(--base-t); background: rgba(99,179,237,0.08); }
+.base-g { border-color: var(--base-g); color: var(--base-g); background: rgba(104,211,145,0.08); }
+.base-c { border-color: var(--base-c); color: var(--base-c); background: rgba(246,224,94,0.08); }
+
+/* ===== TIMELINE ===== */
+.timeline { margin-top: 24px; }
+.tl-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tl-year {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  white-space: nowrap;
+  min-width: 40px;
+  padding-top: 2px;
+}
+.tl-text { font-size: 0.9rem; color: var(--text-muted); }
+
+/* ===== VISUAL / ANIM BOX ===== */
+.visual-col { display: flex; justify-content: center; }
+
+.anim-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 340px;
+}
+
+.anim-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+  letter-spacing: 0.05em;
+}
+
+/* ===== PCR STEPS ===== */
+.process-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px;
+  margin-top: 32px;
+}
+
+.process-block.dark {
+  background: #0a0e1a;
+}
+
+.process-block h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.process-block > p {
+  color: var(--text-muted);
+  margin-bottom: 36px;
+}
+
+.pcr-steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pcr-step {
+  flex: 1;
+  min-width: 140px;
+  background: rgba(99,179,237,0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  transition: border-color 0.3s, background 0.3s;
+  cursor: default;
+}
+
+.pcr-step:hover {
+  border-color: var(--accent);
+  background: rgba(99,179,237,0.12);
+}
+
+.pcr-icon { font-size: 2rem; margin-bottom: 10px; }
+.pcr-step h4 { font-size: 0.95rem; color: #fff; margin-bottom: 6px; }
+.pcr-step p { font-size: 0.8rem; color: var(--text-muted); }
+.pcr-arrow { color: var(--accent); font-size: 1.2rem; }
+
+/* ===== INFO CARD ===== */
+.info-card {
+  background: rgba(104,211,145,0.07);
+  border: 1px solid rgba(104,211,145,0.25);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.info-card h4 { color: var(--accent2); margin-bottom: 8px; }
+.info-card p { font-size: 0.9rem; color: var(--text-muted); }
+.info-card strong { color: var(--text); }
+.info-card em { color: var(--accent2); font-style: normal; }
+
+/* ===== STEPS LIST ===== */
+.steps-list {
+  padding-left: 0;
+  list-style: none;
+  counter-reset: steps;
+  margin: 16px 0 24px;
+}
+.steps-list li {
+  counter-increment: steps;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.steps-list li::before {
+  content: counter(steps, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  min-width: 24px;
+  padding-top: 2px;
+}
+.steps-list li strong { color: var(--text); }
+
+/* ===== RESULT CARDS ===== */
+.result-cards { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.result-card {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+.result-card span { font-size: 1.5rem; }
+.result-card strong { display: block; margin-bottom: 2px; font-size: 0.9rem; }
+.result-card p { font-size: 0.78rem; color: var(--text-muted); }
+
+.result-card.positive {
+  border-color: rgba(104,211,145,0.4);
+  background: rgba(104,211,145,0.07);
+}
+.result-card.positive span { color: var(--accent2); }
+.result-card.positive strong { color: var(--accent2); }
+
+.result-card.negative {
+  border-color: rgba(252,129,129,0.4);
+  background: rgba(252,129,129,0.07);
+}
+.result-card.negative span { color: var(--accent3); }
+.result-card.negative strong { color: var(--accent3); }
+
+/* ===== STR TABLE ===== */
+.str-demo {
+  margin-top: 64px;
+}
+.str-demo h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.str-demo > p { color: var(--text-muted); margin-bottom: 24px; }
+
+.str-table-wrap { overflow-x: auto; }
+
+.str-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.str-table th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.str-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.str-table tr:hover td { background: rgba(99,179,237,0.04); }
+.match { color: var(--accent2) !important; font-weight: 500; }
+
+/* ===== DIAG GRID ===== */
+.diag-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.diag-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.diag-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.diag-icon { font-size: 2rem; margin-bottom: 16px; }
+.diag-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+.diag-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; }
+.diag-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+/* ===== RT-PCR FLOW ===== */
+.rtpcr-flow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.flow-step {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 0 16px;
+}
+
+.flow-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flow-text h4 { color: #fff; font-size: 0.9rem; margin-bottom: 6px; }
+.flow-text p { font-size: 0.8rem; color: var(--text-muted); }
+
+.flow-line {
+  width: 1px;
+  height: 60px;
+  background: var(--border);
+  margin-top: 18px;
+  flex-shrink: 0;
+}
+
+#pcr-curve {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  background: rgba(0,0,0,0.3);
+}
+
+/* ===== COMPARE TABLE ===== */
+.compare-block { margin-top: 48px; }
+.compare-block h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 24px;
+}
+.compare-table-wrap { overflow-x: auto; }
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.compare-table th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.compare-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+  vertical-align: middle;
+}
+.compare-table tr:hover td { background: rgba(99,179,237,0.04); }
+.bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.bar {
+  display: inline-block;
+  height: 6px;
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+/* ===== GLOSSARY ===== */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.glossary-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  transition: border-color 0.3s;
+}
+.glossary-item:hover { border-color: var(--accent); }
+.glossary-item h4 {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.glossary-item p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: #03040a;
+  border-top: 1px solid var(--border);
+  padding: 48px 40px;
+}
+
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.footer p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 6px; }
+.footer-small { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.6; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.6); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .intro-strip { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .two-col.reverse { direction: ltr; }
+  .diag-grid { grid-template-columns: 1fr; }
+  .glossary-grid { grid-template-columns: 1fr; }
+  .pcr-steps { flex-direction: column; }
+  .pcr-arrow { transform: rotate(90deg); }
+  .rtpcr-flow { flex-direction: column; }
+  .flow-line { display: none; }
+  .content-section { padding: 60px 20px; }
+  .process-block { padding: 28px 20px; }
+}
+
+</style>
 </head>
 <body>
 
@@ -379,6 +1092,454 @@
     </div>
   </footer>
 
-  <script src="animations.js"></script>
+  <script>
+/* animations.js — all canvas/animation logic */
+
+// ─── 1. HERO DNA PARTICLE FIELD ───────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('dna-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], t = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    initParticles();
+  }
+
+  function initParticles() {
+    particles = [];
+    const count = Math.floor((W * H) / 14000);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 2 + 0.5,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        hue: [207, 160, 355, 45][Math.floor(Math.random() * 4)]
+      });
+    }
+  }
+
+  function drawHelixStrands() {
+    const cols = Math.ceil(W / 140);
+    for (let col = 0; col < cols; col++) {
+      const cx = col * 140 + 70;
+      ctx.save();
+      for (let y = -20; y < H + 20; y += 6) {
+        const phase = (y / H) * Math.PI * 4 + t * 0.4;
+        const x1 = cx + Math.sin(phase) * 30;
+        const x2 = cx + Math.sin(phase + Math.PI) * 30;
+        const alpha = 0.4 + 0.3 * Math.abs(Math.sin(phase));
+
+        // Strand 1
+        ctx.beginPath();
+        ctx.arc(x1, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(207, 80%, 65%, ${alpha})`;
+        ctx.fill();
+
+        // Strand 2
+        ctx.beginPath();
+        ctx.arc(x2, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(160, 70%, 60%, ${alpha})`;
+        ctx.fill();
+
+        // Cross bridges (every ~20px)
+        if (y % 24 < 6) {
+          ctx.beginPath();
+          ctx.moveTo(x1, y);
+          ctx.lineTo(x2, y);
+          ctx.strokeStyle = `hsla(45, 80%, 65%, ${alpha * 0.6})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawParticles() {
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 70%, 65%, 0.5)`;
+      ctx.fill();
+    });
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    drawHelixStrands();
+    drawParticles();
+    t += 0.015;
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  loop();
+})();
+
+// ─── 2. DOUBLE HELIX SECTION ANIMATION ───────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('helix-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t = 0;
+  const COLORS = { A: '#fc8181', T: '#63b3ed', G: '#68d391', C: '#f6e05e' };
+  const PAIRS = [['A','T'],['G','C'],['T','A'],['C','G'],['A','T'],['G','C'],['T','A'],['C','G']];
+
+  function drawHelix() {
+    ctx.clearRect(0, 0, W, H);
+    const cx = W / 2;
+    const amp = 70;
+    const step = H / 18;
+
+    // Draw backbone lines first
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const y = (i / 200) * H;
+      const phase = (y / H) * Math.PI * 4 + t;
+      const x = cx + Math.sin(phase) * amp;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(99,179,237,0.35)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const y = (i / 200) * H;
+      const phase = (y / H) * Math.PI * 4 + t + Math.PI;
+      const x = cx + Math.sin(phase) * amp;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(104,211,145,0.35)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw rungs + bases
+    PAIRS.forEach((pair, i) => {
+      const y = (i / (PAIRS.length - 1)) * (H - 60) + 30;
+      const phase = (y / H) * Math.PI * 4 + t;
+      const x1 = cx + Math.sin(phase) * amp;
+      const x2 = cx + Math.sin(phase + Math.PI) * amp;
+
+      const zFactor = (Math.sin(phase) + 1) / 2;
+      const alpha = 0.4 + 0.6 * zFactor;
+
+      // Rung bridge
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      ctx.lineTo(x2, y);
+      ctx.strokeStyle = `rgba(200,200,200,${alpha * 0.25})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Base 1
+      const r = 9 + zFactor * 4;
+      ctx.beginPath();
+      ctx.arc(x1, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS[pair[0]] + Math.floor(alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.font = `bold ${Math.floor(9 + zFactor * 3)}px DM Mono, monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pair[0], x1, y);
+
+      // Base 2
+      ctx.beginPath();
+      ctx.arc(x2, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS[pair[1]] + Math.floor(alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillText(pair[1], x2, y);
+    });
+  }
+
+  function loop() {
+    drawHelix();
+    t += 0.018;
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ─── 3. GEL ELECTROPHORESIS ANIMATION ────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('gel-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const lanes = [
+    { label: 'Mãe', bands: [0.18, 0.42, 0.60, 0.75], color: '#fc8181' },
+    { label: 'Filho', bands: [0.18, 0.35, 0.55, 0.70], color: '#f6e05e' },
+    { label: 'Pai', bands: [0.28, 0.35, 0.48, 0.70], color: '#63b3ed' },
+    { label: 'Ladder', bands: [0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90], color: 'rgba(200,200,200,0.5)' }
+  ];
+
+  let progress = 0; // 0 → 1
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = '#050a14';
+    ctx.fillRect(0, 0, W, H);
+
+    // Title
+    ctx.fillStyle = 'rgba(99,179,237,0.7)';
+    ctx.font = '11px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('— ELETROFORESE EM GEL —', W / 2, 16);
+
+    // Labels
+    ctx.font = '10px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    lanes.forEach((lane, i) => {
+      const lx = (i + 0.5) * (W / lanes.length);
+      ctx.fillStyle = lane.color;
+      ctx.fillText(lane.label, lx, 34);
+    });
+
+    // Gel area
+    const gelTop = 44;
+    const gelH = H - 60;
+
+    ctx.fillStyle = 'rgba(30,40,70,0.5)';
+    ctx.fillRect(10, gelTop, W - 20, gelH);
+
+    // Lane separators
+    ctx.strokeStyle = 'rgba(99,179,237,0.08)';
+    ctx.lineWidth = 1;
+    lanes.forEach((_, i) => {
+      const lx = i * (W / lanes.length);
+      ctx.beginPath();
+      ctx.moveTo(lx + 10, gelTop);
+      ctx.lineTo(lx + 10, gelTop + gelH);
+      ctx.stroke();
+    });
+
+    // Bands
+    lanes.forEach((lane, li) => {
+      const lx = (li + 0.5) * (W / lanes.length);
+      const laneW = (W / lanes.length) - 10;
+
+      lane.bands.forEach(pos => {
+        const targetY = gelTop + pos * gelH;
+        const bandY = gelTop + (progress * pos) * gelH;
+
+        if (bandY > gelTop + gelH) return;
+
+        const bandH = 4;
+        const grd = ctx.createLinearGradient(lx - laneW / 2, 0, lx + laneW / 2, 0);
+        grd.addColorStop(0, 'transparent');
+        grd.addColorStop(0.2, lane.color);
+        grd.addColorStop(0.8, lane.color);
+        grd.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = grd;
+        ctx.globalAlpha = 0.85;
+        ctx.fillRect(lx - laneW / 2, bandY, laneW, bandH);
+
+        // Glow
+        ctx.shadowColor = lane.color;
+        ctx.shadowBlur = 8;
+        ctx.fillRect(lx - laneW / 2, bandY, laneW, bandH);
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+      });
+    });
+
+    // Electric field arrow indicator
+    ctx.fillStyle = 'rgba(99,179,237,0.5)';
+    ctx.font = '9px DM Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('(−)', 12, gelTop + 12);
+    ctx.textAlign = 'right';
+    ctx.fillText('(+)', W - 12, gelTop + gelH - 6);
+  }
+
+  function loop() {
+    if (progress < 1) progress += 0.002;
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ─── 4. PCR AMPLIFICATION CURVE ──────────────────────────────────────────────
+(function () {
+  const canvas = document.getElementById('pcr-curve');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let animProgress = 0;
+
+  function sigmoid(x) {
+    return 1 / (1 + Math.exp(-10 * (x - 0.55)));
+  }
+
+  function drawCurve(progress) {
+    ctx.clearRect(0, 0, W, H);
+
+    const pad = { left: 60, right: 20, top: 20, bottom: 40 };
+    const gW = W - pad.left - pad.right;
+    const gH = H - pad.top - pad.bottom;
+
+    // Background
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(99,179,237,0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = pad.top + (i / 5) * gH;
+      ctx.beginPath();
+      ctx.moveTo(pad.left, y);
+      ctx.lineTo(W - pad.right, y);
+      ctx.stroke();
+    }
+
+    // Threshold line
+    const thresholdY = pad.top + 0.3 * gH;
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = 'rgba(246, 224, 94, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, thresholdY);
+    ctx.lineTo(W - pad.right, thresholdY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = 'rgba(246, 224, 94, 0.8)';
+    ctx.font = '9px DM Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('Threshold (Ct)', pad.left + 4, thresholdY - 4);
+
+    // Axes
+    ctx.strokeStyle = 'rgba(99,179,237,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, pad.top + gH);
+    ctx.lineTo(W - pad.right, pad.top + gH);
+    ctx.stroke();
+
+    // Axis labels
+    ctx.fillStyle = 'rgba(136,153,170,0.8)';
+    ctx.font = '9px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Ciclos de PCR', pad.left + gW / 2, H - 4);
+    ctx.save();
+    ctx.translate(14, pad.top + gH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Fluorescência', 0, 0);
+    ctx.restore();
+
+    // Cycle numbers on x axis
+    [10, 20, 30, 40].forEach(n => {
+      const x = pad.left + (n / 40) * gW;
+      ctx.fillStyle = 'rgba(136,153,170,0.6)';
+      ctx.textAlign = 'center';
+      ctx.fillText(n, x, pad.top + gH + 14);
+    });
+
+    // Curves (positive + negative)
+    const curves = [
+      { color: '#63b3ed', label: 'Positivo', offset: 0 },
+      { color: '#68d391', label: 'Positivo (replicate)', offset: 0.02 },
+      { color: '#fc8181', label: 'Negativo (controle)', flatAt: 0.08 }
+    ];
+
+    curves.forEach(c => {
+      ctx.beginPath();
+      let started = false;
+      for (let xi = 0; xi <= gW * progress; xi++) {
+        const t = xi / gW;
+        let fl;
+        if (c.flatAt !== undefined) {
+          fl = c.flatAt + (Math.random() * 0.015 - 0.007);
+        } else {
+          fl = 0.02 + sigmoid(t + (c.offset || 0)) * 0.92 + Math.random() * 0.006;
+        }
+        fl = Math.max(0, Math.min(1, fl));
+        const x = pad.left + xi;
+        const y = pad.top + gH - fl * gH;
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = c.color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Legend
+      const li = curves.indexOf(c);
+      const lx = pad.left + gW - 130;
+      const ly = pad.top + 16 + li * 18;
+      ctx.fillStyle = c.color;
+      ctx.fillRect(lx, ly - 5, 16, 3);
+      ctx.font = '9px DM Mono, monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(c.label, lx + 22, ly);
+    });
+  }
+
+  // Animate on scroll into view
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      animProgress = 0;
+      const run = () => {
+        if (animProgress < 1) {
+          animProgress += 0.005;
+          drawCurve(animProgress);
+          requestAnimationFrame(run);
+        }
+      };
+      run();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(canvas);
+  drawCurve(0);
+})();
+
+// ─── 5. SCROLL REVEAL ────────────────────────────────────────────────────────
+(function () {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  const targets = document.querySelectorAll(
+    '.strip-card, .diag-card, .glossary-item, .pcr-step, .tl-item, .flow-step'
+  );
+  targets.forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`;
+    observer.observe(el);
+  });
+})();
+
+</script>
 </body>
 </html>
